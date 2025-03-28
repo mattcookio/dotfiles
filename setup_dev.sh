@@ -20,15 +20,13 @@ brew install \
     ripgrep \
     fd \
     fzf \
-    bat \
-    exa \
-    delta \
-    tree-sitter \
     lazygit \
     n \
     go \
     luarocks \
-    pipx
+    pipx \
+    font-jetbrains-mono-nerd-font \
+    font-jetbrains-mono
 
 # Install Poetry for Python
 pipx install poetry

@@ -3,10 +3,6 @@
 # Exit on error
 set -e
 
-# Run dev environment setup
-echo "Running development environment setup..."
-./setup_dev.sh
-
 # Create necessary directories
 mkdir -p ~/.config
 
