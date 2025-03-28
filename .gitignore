@@ -1,0 +1,48 @@
+# Ignore temporary and backup files
+*~
+*.swp
+*.swo
+*.tmp
+*.bak
+*.old
+
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+Desktop.ini
+
+# Windows system files
+Thumbs.db
+ehthumbs.db
+
+# Ignore common cache and build directories
+node_modules/
+dist/
+build/
+.cache/
+tmp/
+logs/
+
+# Vim swap and backup files
+*.vim[~]
+*.un~
+
+# VSCode settings (optional)
+.vscode/
+*.code-workspace
+
+# Project-specific entries
+tt.*
+.tests
+doc/tags
+debug
+.repro
+foo.*
+*.log
+data
+
+# Ignore environment variables
+.env
+.env.local
