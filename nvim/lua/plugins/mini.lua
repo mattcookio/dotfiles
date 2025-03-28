@@ -17,6 +17,8 @@ return {
             require('mini.pick').setup()
             require('mini.icons').setup()
             require('mini.jump').setup()
+	    require('mini.sessions').setup()
+	    require('mini.starter').setup()
             require('mini.jump2d').setup({
                 view = {
                     dim = true
