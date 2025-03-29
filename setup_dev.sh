@@ -26,7 +26,8 @@ brew install \
     luarocks \
     pipx \
     font-jetbrains-mono-nerd-font \
-    font-jetbrains-mono
+    font-jetbrains-mono \
+    vscodium
 
 # Install Poetry for Python
 pipx install poetry
