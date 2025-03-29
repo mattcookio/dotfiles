@@ -1,27 +1,27 @@
--- With feedback message
-vim.keymap.set('n', '<leader>cd', function()
-    vim.cmd.lcd(vim.fn.expand('%:p:h'))
-    vim.notify('Changed directory to: ' .. vim.fn.getcwd())
-end, { desc = "Change directory to current file" })
+----------------------------------------
+-- File/Find Operations (f)
+----------------------------------------
 
+-- Open file explorer
 vim.keymap.set("n", "<leader>fe", function()
-    MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
-    MiniFiles.reveal_cwd()
+  MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
+  MiniFiles.reveal_cwd()
 end, {
-    desc = "Open mini.files",
-    silent = true
+  desc = "Explorer (mini.files)",
+  silent = true
 })
 
+-- Open file picker
 vim.keymap.set("n", "<leader>ff", function()
-    MiniPick.builtin.files({ source = { cwd = vim.fn.getcwd() } })
+  MiniPick.builtin.files({ source = { cwd = vim.fn.getcwd() } })
 end, {
-    desc = "Open file picker",
-    silent = true
+  desc = "Find Files",
+  silent = true
 })
 
-local jump = require('mini.jump2d')
+----------------------------------------
+-- Git Operations (g)
+----------------------------------------
 
--- Two character search
-vim.keymap.set("n", "<leader><leader>", function()
-    jump.start()
-end, { desc = "Jump2D" })
+-- Open lazygit
+vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { noremap = true, silent = true, desc = "Lazygit" })
