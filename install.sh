@@ -3,22 +3,33 @@
 # Get the directory where the script is located
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
-# Clean up existing configurations
-echo "Cleaning up existing configurations..."
-rm -rf ~/.config/nvim
-rm -rf ~/.config/alacritty
+# Function to safely create symlink
+create_symlink() {
+    local source=$1
+    local target=$2
 
-# Create fresh directories
-echo "Creating fresh directories..."
-mkdir -p ~/.config/nvim
-mkdir -p ~/.config/alacritty
+    # Remove existing symlink or file/directory
+    if [ -L "$target" ] || [ -e "$target" ]; then
+        echo "Removing existing $target..."
+        rm -rf "$target"
+    fi
 
-# Copy Neovim files
-echo "Copying Neovim configuration..."
-cp -r "$SCRIPT_DIR/nvim/"* ~/.config/nvim/
+    # Create parent directories if they don't exist
+    mkdir -p "$(dirname "$target")"
 
-# Copy Alacritty configuration
-echo "Copying Alacritty configuration..."
-cp "$SCRIPT_DIR/alacritty/alacritty.toml" ~/.config/alacritty/
+    # Create symlink
+    echo "Creating symlink: $target -> $source"
+    ln -s "$source" "$target"
+}
 
-echo "Installation complete!" 
+# Clean up existing symlinks
+echo "Cleaning up existing symlinks..."
+rm -f ~/.config/nvim
+rm -f ~/.config/alacritty
+
+# Create symlinks
+echo "Creating symlinks..."
+create_symlink "$SCRIPT_DIR/nvim" ~/.config/nvim
+create_symlink "$SCRIPT_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
+
+echo "Installation complete!"

@@ -117,3 +117,31 @@ for i = 1, 9 do
     end
   end, { desc = "Go to visit " .. i })
 end
+
+----------------------------------------
+-- Editor Operations (e)
+----------------------------------------
+
+-- Quick save and quit
+vim.keymap.set('n', '<leader>wq', '<cmd>wq<cr>', { desc = "Save and Quit" })
+
+-- Force quit without saving
+vim.keymap.set('n', '<leader>q', '<cmd>q!<cr>', { desc = "Force Quit" })
+
+-- Clean up trailing spaces
+vim.keymap.set('n', '<leader>ts', function()
+  require('mini.trailspace').trim()
+end, { desc = "Trim Trailing Spaces" })
+
+----------------------------------------
+-- CodeCompanion Operations (c)
+----------------------------------------
+
+-- Open CodeCompanion chat
+vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "Toggle CodeCompanion Chat" })
+
+-- Toggle inline assistant
+vim.keymap.set('n', '<leader>ci', '<cmd>CodeCompanion<cr>', { desc = "Toggle Inline Assistant" })
+
+-- Open action palette
+vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "Open Action Palette" })
