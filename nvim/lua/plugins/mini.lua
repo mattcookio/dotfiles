@@ -5,7 +5,16 @@ return {
     config = function()
       require('mini.ai').setup()
       require('mini.surround').setup()
-      require('mini.files').setup()
+      require('mini.files').setup({
+        windows = {
+          preview = true,
+          width_focus = 30,
+          width_preview = 50
+        },
+        mappings = {
+          go_in_plus = '<CR>',
+        }
+      })
       require('mini.animate').setup()
       require('mini.statusline').setup()
       require('mini.indentscope').setup()
