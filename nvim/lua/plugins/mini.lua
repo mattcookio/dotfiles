@@ -5,10 +5,12 @@ return {
     config = function()
       require('mini.ai').setup()
       require('mini.surround').setup()
+      require('mini.starter').setup()
+      require('mini.tabline').setup()
       require('mini.files').setup({
         mappings = {
-    go_in_plus  = '<CR>',
-  },
+          go_in_plus = '<CR>',
+        },
       })
       require('mini.bracketed').setup()
       require('mini.animate').setup()
@@ -22,9 +24,6 @@ return {
 
       vim.keymap.set('n', '<leader>fe', function()
         require('mini.files').open()
-        -- Set enter to open file from file Explorer
-        --
-
       end, { desc = 'Open File Explorer' })
     end,
   },

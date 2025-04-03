@@ -21,6 +21,51 @@ vim.keymap.set('n', '<leader>w', function()
   vim.notify('File saved!', vim.log.levels.INFO)
 end, { desc = "Save File" })
 
+-- Go to next buffer
+vim.keymap.set('n', '<C-l>', ':bnext<CR>', { noremap = true, silent = true })
+
+-- Go to previous buffer
+vim.keymap.set('n', '<C-h>', ':bprev<CR>', { noremap = true, silent = true })
+
+-- Close current buffer
+vim.keymap.set('n', '<leader>bd', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.bo[bufnr].buftype == 'terminal' then
+    vim.cmd('q')
+  else
+    vim.cmd('bd')
+  end
+end, { desc = "Close Buffer" })
+
+-- Close all other buffers
+vim.keymap.set('n', '<leader>bo', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.bo[bufnr].buftype == 'terminal' then
+    vim.cmd('q')
+  else
+    local current_buf = vim.api.nvim_get_current_buf()
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+        vim.api.nvim_buf_delete(buf, { force = true })
+      end
+    end
+  end
+end, { desc = "Close Other Buffers" })
+
+-- Close all buffers
+vim.keymap.set('n', '<leader>ba', function()
+  local bufnr = vim.api.nvim_get_current_buf()
+  if vim.bo[bufnr].buftype == 'terminal' then
+    vim.cmd('q')
+  else
+    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
+      if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
+        vim.api.nvim_buf_delete(buf, { force = true })
+      end
+    end
+  end
+end, { desc = "Close All Buffers" })
+
 ----------------------------------------
 -- Lazy Operations (l)
 ----------------------------------------
