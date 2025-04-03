@@ -1,35 +1,18 @@
-#!/bin/bash
+#!/bin/zsh
 
-# Get the directory where the script is located
-SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+# Create necessary directories
+mkdir -p ~/.config/nvim
+mkdir -p ~/.config/alacritty
+mkdir -p ~/.config/karabiner
 
-# Function to safely create symlink
-create_symlink() {
-    local source=$1
-    local target=$2
+# Remove existing symlinks if they exist
+rm -f ~/.config/nvim/init.lua
+rm -f ~/.config/alacritty/alacritty.yml
+rm -f ~/.config/karabiner/karabiner.json
 
-    # Remove existing symlink or file/directory
-    if [ -L "$target" ] || [ -e "$target" ]; then
-        echo "Removing existing $target..."
-        rm -rf "$target"
-    fi
+# Create new symlinks
+ln -s "$(pwd)/nvim/init.lua" ~/.config/nvim/init.lua
+ln -s "$(pwd)/alacritty/alacritty.yml" ~/.config/alacritty/alacritty.yml
+ln -s "$(pwd)/karabiner/karabiner.json" ~/.config/karabiner/karabiner.json
 
-    # Create parent directories if they don't exist
-    mkdir -p "$(dirname "$target")"
-
-    # Create symlink
-    echo "Creating symlink: $target -> $source"
-    ln -s "$source" "$target"
-}
-
-# Clean up existing symlinks
-echo "Cleaning up existing symlinks..."
-rm -f ~/.config/nvim
-rm -f ~/.config/alacritty
-
-# Create symlinks
-echo "Creating symlinks..."
-create_symlink "$SCRIPT_DIR/nvim" ~/.config/nvim
-create_symlink "$SCRIPT_DIR/alacritty/alacritty.toml" ~/.config/alacritty/alacritty.toml
-
-echo "Installation complete!"
+echo "Configuration files have been symlinked successfully!"
