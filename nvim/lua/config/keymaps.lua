@@ -1,122 +1,9 @@
 ----------------------------------------
--- File/Find Operations (f)
-----------------------------------------
-
--- Open file explorer
-vim.keymap.set("n", "<leader>fe", function()
-  MiniFiles.open(vim.api.nvim_buf_get_name(0), false)
-  MiniFiles.reveal_cwd()
-end, {
-  desc = "Explorer (mini.files)",
-  silent = true
-})
-
--- Open file picker
-vim.keymap.set("n", "<leader>ff", function()
-  MiniPick.builtin.files({
-    tool = 'git' -- Use git for better performance
-  })
-end, {
-  desc = "Find Files",
-  silent = true
-})
-
--- Find buffers
-vim.keymap.set("n", "<leader>fb", function()
-  MiniPick.builtin.buffers({
-    include_current = true,
-    include_unlisted = false
-  })
-end, {
-  desc = "Find Buffers",
-  silent = true
-})
-
--- Find help
-vim.keymap.set("n", "<leader>fh", function()
-  MiniPick.builtin.help({
-    default_split = "horizontal"
-  })
-end, {
-  desc = "Find Help",
-  silent = true
-})
-
--- Live grep limited to current directory
-vim.keymap.set("n", "<leader>fg", function()
-  require("mini.pick").builtin.grep_live({
-    tool = 'rg',
-    args = { '--color=never', '--no-heading', '--with-filename', '--line-number', '--column', '--smart-case' },
-    cwd = vim.fn.getcwd() -- Limit to current directory
-  })
-end, {
-  desc = "Live Grep (Current Directory)",
-  silent = true
-})
-
-
--- Resume last picker
-vim.keymap.set("n", "<leader>fr", function()
-  MiniPick.builtin.resume()
-end, {
-  desc = "Resume Last Picker",
-  silent = true
-})
-
-----------------------------------------
 -- Git Operations (g)
 ----------------------------------------
 
 -- Open lazygit
 vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { noremap = true, silent = true, desc = "Lazygit" })
-
-----------------------------------------
--- Harpoon-like Operations (h)
-----------------------------------------
-
--- Add current file to visits
-vim.keymap.set('n', '<leader>ha', function()
-  require('mini.visits').add_path()
-  vim.notify('Added file to visits', vim.log.levels.INFO)
-end, { desc = "Add file to visits" })
-
--- Remove current file from visits
-vim.keymap.set('n', '<leader>hd', function()
-  require('mini.visits').remove_path()
-  vim.notify('Removed file from visits', vim.log.levels.INFO)
-end, { desc = "Remove file from visits" })
-
--- Show visits
-vim.keymap.set('n', '<leader>hh', function()
-  require('mini.visits').select_path()
-end, { desc = "Show visits" })
-
--- Go to next visit
-vim.keymap.set('n', '<leader>hn', function()
-  require('mini.visits').iterate_paths('forward')
-end, { desc = "Next visit" })
-
--- Go to previous visit
-vim.keymap.set('n', '<leader>hp', function()
-  require('mini.visits').iterate_paths('backward')
-end, { desc = "Previous visit" })
-
--- Clear all visits
-vim.keymap.set('n', '<leader>hc', function()
-  require('mini.visits').set_index({})
-  require('mini.visits').write_index()
-  vim.notify('Cleared all visits', vim.log.levels.INFO)
-end, { desc = "Clear visits" })
-
--- Quick navigation to specific visits
-for i = 1, 9 do
-  vim.keymap.set('n', '<leader>' .. i, function()
-    local paths = require('mini.visits').list_paths()
-    if paths[i] then
-      vim.cmd.edit(paths[i])
-    end
-  end, { desc = "Go to visit " .. i })
-end
 
 ----------------------------------------
 -- Editor Operations (e)
@@ -128,20 +15,27 @@ vim.keymap.set('n', '<leader>wq', '<cmd>wq<cr>', { desc = "Save and Quit" })
 -- Force quit without saving
 vim.keymap.set('n', '<leader>q', '<cmd>q!<cr>', { desc = "Force Quit" })
 
--- Clean up trailing spaces
-vim.keymap.set('n', '<leader>ts', function()
-  require('mini.trailspace').trim()
-end, { desc = "Trim Trailing Spaces" })
+-- Save file
+vim.keymap.set('n', '<leader>w', function()
+  vim.cmd('w')
+  vim.notify('File saved!', vim.log.levels.INFO)
+end, { desc = "Save File" })
 
 ----------------------------------------
--- CodeCompanion Operations (c)
+-- Lazy Operations (l)
 ----------------------------------------
 
--- Open CodeCompanion chat
-vim.keymap.set('n', '<leader>cc', '<cmd>CodeCompanionChat Toggle<cr>', { desc = "Toggle CodeCompanion Chat" })
+-- Sync
+vim.keymap.set('n', '<leader>ls', ':Lazy sync<CR>', { noremap = true, silent = true, desc = "Lazy Sync" })
 
--- Toggle inline assistant
-vim.keymap.set('n', '<leader>ci', '<cmd>CodeCompanion<cr>', { desc = "Toggle Inline Assistant" })
+-- Reload configuration
+vim.keymap.set('n', '<leader>lr', function()
+  -- Source all lua files in config
+  for _, file in ipairs(vim.fn.glob(vim.fn.stdpath('config') .. '/lua/**/*.lua', false, true)) do
+    dofile(file)
+  end
+  -- Source init.lua
+  dofile(vim.fn.stdpath('config') .. '/init.lua')
+  vim.notify('Nvim configuration reloaded!', vim.log.levels.INFO)
+end, { desc = '[R]eload [C]onfiguration' })
 
--- Open action palette
-vim.keymap.set('n', '<leader>ca', '<cmd>CodeCompanionActions<cr>', { desc = "Open Action Palette" })

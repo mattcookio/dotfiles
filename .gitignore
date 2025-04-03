@@ -46,3 +46,4 @@ data
 # Ignore environment variables
 .env
 .env.local
+Session.vim

@@ -6,29 +6,26 @@ return {
       require('mini.ai').setup()
       require('mini.surround').setup()
       require('mini.files').setup({
-        windows = {
-          preview = true,
-          width_focus = 30,
-          width_preview = 50
-        },
         mappings = {
-          go_in_plus = '<CR>',
-        }
+    go_in_plus  = '<CR>',
+  },
       })
+      require('mini.bracketed').setup()
       require('mini.animate').setup()
       require('mini.statusline').setup()
       require('mini.indentscope').setup()
       require('mini.comment').setup()
       require('mini.pairs').setup()
       require('mini.comment').setup()
-      require('mini.pick').setup()
       require('mini.icons').setup()
-      require('mini.diff').setup()
-      require('mini.git').setup()
       require('mini.jump').setup()
-      require('mini.visits').setup()
-      require('mini.trailspace').setup()
-      require('mini.starter').setup()
+
+      vim.keymap.set('n', '<leader>fe', function()
+        require('mini.files').open()
+        -- Set enter to open file from file Explorer
+        --
+
+      end, { desc = 'Open File Explorer' })
     end,
   },
 }
