@@ -20,7 +20,15 @@ return {
       require('mini.pairs').setup()
       require('mini.comment').setup()
       require('mini.icons').setup()
-      require('mini.jump').setup()
+      require('mini.jump').setup({
+        mappings = {
+          forward = 'f',
+          backward = 'F',
+          forward_till = 't',
+          backward_till = 'T',
+          repeat_jump = ';',
+        },
+      })
 
       vim.keymap.set('n', '<leader>fe', function()
         require('mini.files').open()

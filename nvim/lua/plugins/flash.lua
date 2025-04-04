@@ -2,8 +2,19 @@ return {
   {
     "folke/flash.nvim",
     config = function()
-      vim.keymap.set({ "n", "x", "o" }, "<leader><leader>", function()
-        require("flash").jump()
+      vim.keymap.set({ "n", "x", "o" }, "m", function()
+        local gi = vim.go.ignorecase
+        local gs = vim.go.smartcase
+        vim.go.ignorecase = true
+        vim.go.smartcase = false
+        require("flash").jump({
+          search = {
+            mode = "fuzzy",
+            forward = nil,  -- nil means bidirectional
+          },
+        })
+        vim.go.ignorecase = gi
+        vim.go.smartcase = gs
       end)
 
       -- Link to existing theme highlights
@@ -12,9 +23,17 @@ return {
     end,
     opts = {
       modes = {
+        jump = {
+          enabled = false
+        },
         char = {
           enabled = false,
         },
+      },
+      search = {
+        mode = "fuzzy",
+        forward = nil,
+        case_sensitive = false,
       },
       highlight = {
         matches = true,
