@@ -1,21 +1,35 @@
 return {
   {
     "junegunn/goyo.vim",
-    event = "VeryLazy",
     config = function()
       vim.g.goyo_width = 120
-      vim.g.goyo_linenr = 0
-      vim.g.goyo_margin_top = 0
-      vim.g.goyo_margin_bottom = 0
+      vim.g.goyo_linenr = 1
+      vim.g.goyo_margin_top = 4
+      vim.g.goyo_margin_bottom = 4
+
+      -- Store the original settings when entering Goyo
+      vim.api.nvim_create_autocmd('User', {
+        pattern = 'GoyoEnter',
+        callback = function()
+          -- Preserve the existing number settings
+          local number_setting = vim.opt.number:get()
+          local relative_number_setting = vim.opt.relativenumber:get()
+
+          -- Restore them after Goyo sets its own
+          vim.schedule(function()
+            vim.opt.number = number_setting
+            vim.opt.relativenumber = relative_number_setting
+          end)
+        end
+      })
     end,
   },
   {
     "folke/twilight.nvim",
-    event = "VeryLazy",
     config = function()
       require("twilight").setup({
         dimming = {
-          alpha = 0.25,
+          alpha = 0.5,
           color = { "Normal", "#ffffff" },
           inactive = true,
         },
@@ -28,14 +42,6 @@ return {
           "if_statement",
         },
       })
-
-      -- Toggle both Goyo and Twilight
-      vim.keymap.set("n", "<leader>z", function()
-        vim.cmd("Goyo")
-        vim.cmd("Twilight")
-      end)
     end,
   },
 }
-
- 

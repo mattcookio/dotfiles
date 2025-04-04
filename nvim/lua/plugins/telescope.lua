@@ -52,5 +52,14 @@ return {
     vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = '[F]ind Workspace [S]ymbols' })
     vim.keymap.set('n', '<leader>gd', builtin.lsp_definitions, { desc = '[G]o to [D]efinition' })
     vim.keymap.set('n', '<leader>gD', builtin.lsp_type_definitions, { desc = '[G]o to Type [D]efinition' })
+
+    -- Neovim configs
+    vim.keymap.set('n', '<leader>fn', function()
+      builtin.find_files({
+        prompt_title = 'Neovim Configs',
+        cwd = '~/.config/nvim/',
+        hidden = true,
+      })
+    end, { desc = '[F]ind [N]eovim Configs' })
   end,
 }

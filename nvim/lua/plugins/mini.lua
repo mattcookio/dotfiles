@@ -13,9 +13,13 @@ return {
         },
       })
       require('mini.bracketed').setup()
-      require('mini.animate').setup()
+      -- require('mini.animate').setup()
       require('mini.statusline').setup()
-      require('mini.indentscope').setup()
+      require('mini.indentscope').setup({
+        draw = {
+          animation = function () return 0 end,
+        }
+      })
       require('mini.comment').setup()
       require('mini.pairs').setup()
       require('mini.comment').setup()
