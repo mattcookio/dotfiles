@@ -4,6 +4,7 @@ return {
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-treesitter/nvim-treesitter',
+    'rmagatti/auto-session',
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
@@ -48,8 +49,8 @@ return {
     vim.keymap.set('n', '<leader>fbc', builtin.git_bcommits, { desc = '[F]ind [B]uffer Git [C]ommits' })
 
     -- LSP pickers
-    vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = '[F]ind Buffer [S]ymbols' })
-    vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = '[F]ind Workspace [S]ymbols' })
+    vim.keymap.set('n', '<leader>fbs', builtin.lsp_document_symbols, { desc = '[F]ind [B]uffer [S]ymbols' })
+    vim.keymap.set('n', '<leader>fws', builtin.lsp_workspace_symbols, { desc = '[F]ind [W]orkspace [S]ymbols' })
     vim.keymap.set('n', '<leader>gd', builtin.lsp_definitions, { desc = '[G]o to [D]efinition' })
     vim.keymap.set('n', '<leader>gD', builtin.lsp_type_definitions, { desc = '[G]o to Type [D]efinition' })
 
@@ -61,5 +62,10 @@ return {
         hidden = true,
       })
     end, { desc = '[F]ind [N]eovim Configs' })
+
+    -- Session finder
+    vim.keymap.set('n', '<leader>fs', function()
+      require('auto-session.session-lens').search_session()
+    end, { desc = '[F]ind [S]essions' })
   end,
 }
