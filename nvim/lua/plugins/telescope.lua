@@ -16,11 +16,21 @@ return {
     local telescope = require('telescope')
     local builtin = require('telescope.builtin')
 
-    telescope.setup({})
+    telescope.setup({
+      defaults = {
+        results_title = false,
+        prompt_title = false,
+        preview_title = false,
+        sorting_strategy = "ascending",
+      }
+    })
+
     telescope.load_extension('fzf')
 
     vim.opt.timeoutlen = 500
 
+    -- Rest of your configuration remains the same...
+    -- File pickers
     vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
     vim.keymap.set('n', '<leader>fg', builtin.live_grep, { desc = '[F]ind [G]rep' })
     vim.keymap.set('n', '<leader>fb', builtin.buffers, { desc = '[F]ind [B]uffers' })
@@ -31,12 +41,15 @@ return {
     vim.keymap.set('n', '<leader>fs', builtin.treesitter, { desc = '[F]ind [S]ymbols' })
     vim.keymap.set('n', '<leader>fc', builtin.commands, { desc = '[F]ind [C]ommands' })
     vim.keymap.set('n', '<leader>fp', builtin.builtin, { desc = '[F]ind [P]ickers' })
+
+    -- Git pickers
     vim.keymap.set('n', '<leader>fgc', builtin.git_commits, { desc = '[F]ind [G]it [C]ommits' })
     vim.keymap.set('n', '<leader>fgb', builtin.git_branches, { desc = '[F]ind [G]it [B]ranches' })
     vim.keymap.set('n', '<leader>fbc', builtin.git_bcommits, { desc = '[F]ind [B]uffer Git [C]ommits' })
+
+    -- LSP pickers
     vim.keymap.set('n', '<leader>fs', builtin.lsp_document_symbols, { desc = '[F]ind Buffer [S]ymbols' })
     vim.keymap.set('n', '<leader>fS', builtin.lsp_workspace_symbols, { desc = '[F]ind Workspace [S]ymbols' })
-
     vim.keymap.set('n', '<leader>gd', builtin.lsp_definitions, { desc = '[G]o to [D]efinition' })
     vim.keymap.set('n', '<leader>gD', builtin.lsp_type_definitions, { desc = '[G]o to Type [D]efinition' })
   end,
