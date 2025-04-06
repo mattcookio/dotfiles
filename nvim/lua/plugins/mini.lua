@@ -4,8 +4,28 @@ return {
     version = false,
     config = function()
       require('mini.ai').setup()
+
+      -- Setup mini.sessions *before* mini.starter
+      require('mini.sessions').setup({
+        -- Use parent of config dir (~/.config/sessions)
+        directory = vim.fn.fnamemodify(vim.fn.stdpath("config"), ':h') .. "/sessions",
+        autoread = false, -- Disable autoread
+        autowrite = true,
+      })
+
+      local starter = require('mini.starter')
+      -- Basic starter setup with default sections
+      starter.setup({
+        items = {
+          starter.sections.sessions(),
+          starter.sections.recent_files(),
+          starter.sections.builtin_actions(),
+        },
+        -- Removed custom header, footer, query_updaters, and content_hooks
+      })
+
       require('mini.surround').setup()
-      require('mini.starter').setup()
+      -- mini.sessions setup moved above
       require('mini.tabline').setup()
       require('mini.files').setup({
         mappings = {
@@ -17,7 +37,7 @@ return {
       require('mini.statusline').setup()
       require('mini.indentscope').setup({
         draw = {
-          animation = function () return 0 end,
+          animation = function() return 0 end,
         }
       })
       require('mini.comment').setup()

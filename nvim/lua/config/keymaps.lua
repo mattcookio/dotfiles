@@ -9,11 +9,11 @@ vim.keymap.set('n', '<leader>gg', ':LazyGit<CR>', { noremap = true, silent = tru
 -- Editor Operations (e)
 ----------------------------------------
 
--- Quick save and quit
-vim.keymap.set('n', '<leader>wq', '<cmd>wq<cr>', { desc = "Save and Quit" })
+-- Quick save and quit Neovim entirely
+vim.keymap.set('n', '<leader>wq', '<cmd>wqall<cr>', { desc = "Save and Quit Neovim" })
 
--- Force quit without saving
-vim.keymap.set('n', '<leader>q', '<cmd>q!<cr>', { desc = "Force Quit" })
+-- Force quit Neovim entirely without saving
+vim.keymap.set('n', '<leader>q', '<cmd>qall!<cr>', { desc = "Force Quit Neovim" })
 
 -- Save file
 vim.keymap.set('n', '<leader>w', function()
@@ -21,102 +21,66 @@ vim.keymap.set('n', '<leader>w', function()
   vim.notify('File saved!', vim.log.levels.INFO)
 end, { desc = "Save File" })
 
--- Create splits
+-- Create standard splits (non-buff.nvim versions)
 vim.keymap.set('n', '_', function()
-    vim.cmd('split')      -- Create horizontal split
-    vim.cmd('wincmd j')   -- Move to the new split
-    vim.cmd('enew')       -- Create empty buffer
+  vim.cmd('split')    -- Create horizontal split
+  vim.cmd('wincmd j') -- Move to the new split
+  vim.cmd('enew')     -- Create empty buffer
 end, { desc = 'Horizontal split with empty buffer' })
 
 vim.keymap.set('n', '|', function()
-    vim.cmd('vsplit')     -- Create vertical split
-    vim.cmd('wincmd l')   -- Move to the new split
-    vim.cmd('enew')       -- Create empty buffer
+  vim.cmd('vsplit')   -- Create vertical split
+  vim.cmd('wincmd l') -- Move to the new split
+  vim.cmd('enew')     -- Create empty buffer
 end, { desc = 'Vertical split with empty buffer' })
-
--- Close current split (like bd for buffers)
-vim.keymap.set('n', '<leader>sd', '<C-w>c', { desc = 'Delete Split' })
 
 -- Close all splits except current (like ba for buffers)
 vim.keymap.set('n', '<leader>so', function()
-    vim.cmd('only')
+  vim.cmd('only')
 end, { desc = 'Close All Other Splits' })
 
--- Merge current split with left split
-vim.keymap.set('n', '<leader>sh', function()
-    local current_buf = vim.api.nvim_get_current_buf()
-    vim.cmd('wincmd h')  -- Move to left window
-    if vim.api.nvim_get_current_win() ~= current_buf then  -- Check if we actually moved
-        local target_win = vim.api.nvim_get_current_win()
-        vim.cmd('wincmd l')  -- Move back
-        vim.api.nvim_win_set_buf(target_win, current_buf)  -- Set left window's buffer
-        vim.cmd('close')  -- Close current window
-    end
-end, { desc = 'Merge Split Left' })
+----------------------------------------
+-- Buffer and Split Management
+----------------------------------------
 
--- Merge current split with right split
-vim.keymap.set('n', '<leader>sl', function()
-    local current_buf = vim.api.nvim_get_current_buf()
-    vim.cmd('wincmd l')  -- Move to right window
-    if vim.api.nvim_get_current_win() ~= current_buf then  -- Check if we actually moved
-        local target_win = vim.api.nvim_get_current_win()
-        vim.cmd('wincmd h')  -- Move back
-        vim.api.nvim_win_set_buf(target_win, current_buf)  -- Set right window's buffer
-        vim.cmd('close')  -- Close current window
-    end
-end, { desc = 'Merge Split Right' })
+-- Load the pivot plugin (renamed from buff)
+local pivot = require('pivot')
 
+-- Smart split mappings (creates new split or merges if split exists in that direction)
+vim.keymap.set('n', '<leader>sl', function() pivot.smart_split('l') end, { desc = 'Smart split right (or merge)' })
+vim.keymap.set('n', '<leader>sh', function() pivot.smart_split('h') end, { desc = 'Smart split left (or merge)' })
+vim.keymap.set('n', '<leader>sj', function() pivot.smart_split('j') end, { desc = 'Smart split down (or merge)' })
+vim.keymap.set('n', '<leader>sk', function() pivot.smart_split('k') end, { desc = 'Smart split up (or merge)' })
 
--- Navigation mappings
-vim.keymap.set('n', '<C-h>', '<C-w>h', { desc = 'Move to left split' })
-vim.keymap.set('n', '<C-l>', '<C-w>l', { desc = 'Move to right split' })
-vim.keymap.set('n', '<C-k>', '<C-w>k', { desc = 'Move to upper split' })
-vim.keymap.set('n', '<C-j>', '<C-w>j', { desc = 'Move to lower split' })
+-- Move buffer to adjacent splits
+vim.keymap.set('n', '<leader>bh', function() pivot.move_buffer_to_split('h') end, { desc = '[B]uffer to Left Split' })
+vim.keymap.set('n', '<leader>bl', function() pivot.move_buffer_to_split('l') end, { desc = '[B]uffer to Right Split' })
+vim.keymap.set('n', '<leader>bj', function() pivot.move_buffer_to_split('j') end, { desc = '[B]uffer to Bottom Split' })
+vim.keymap.set('n', '<leader>bk', function() pivot.move_buffer_to_split('k') end, { desc = '[B]uffer to Top Split' })
 
--- Buffer navigation that works on both Mac (Option) and Windows/Linux (Alt)
+-- Buffer navigation (using pivot)
+vim.keymap.set('n', '<C-h>', function() pivot.navigate_all_buffers('prev') end,
+  { noremap = true, silent = true, desc = 'Previous buffer (not in other windows)' })
+vim.keymap.set('n', '<C-l>', function() pivot.navigate_all_buffers('next') end,
+  { noremap = true, silent = true, desc = 'Next buffer (not in other windows)' })
+
+-- Basic buffer navigation with Alt/Option keys
 vim.keymap.set('n', '˙', '<cmd>bprevious!<CR>', { noremap = true, silent = true }) -- Mac Option-h
 vim.keymap.set('n', '¬', '<cmd>bnext!<CR>', { noremap = true, silent = true }) -- Mac Option-l
 vim.keymap.set('n', '<A-h>', '<cmd>bprevious!<CR>', { noremap = true, silent = true }) -- Windows/Linux Alt-h
 vim.keymap.set('n', '<A-l>', '<cmd>bnext!<CR>', { noremap = true, silent = true }) -- Windows/Linux Alt-l
 
--- Close current buffer
-vim.keymap.set('n', '<leader>bd', function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  if vim.bo[bufnr].buftype == 'terminal' then
-    vim.cmd('q')
-  else
-    vim.cmd('bd')
-  end
-end, { desc = "Close Buffer" })
+-- Split navigation with Cmd+Ctrl/Super+Ctrl
+vim.keymap.set('n', '<D-C-h>', '<C-w>h', { desc = 'Move to left split' })
+vim.keymap.set('n', '<D-C-l>', '<C-w>l', { desc = 'Move to right split' })
+vim.keymap.set('n', '<D-C-k>', '<C-w>k', { desc = 'Move to upper split' })
+vim.keymap.set('n', '<D-C-j>', '<C-w>j', { desc = 'Move to lower split' })
 
--- Close all other buffers
-vim.keymap.set('n', '<leader>bo', function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  if vim.bo[bufnr].buftype == 'terminal' then
-    vim.cmd('q')
-  else
-    local current_buf = vim.api.nvim_get_current_buf()
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-      if buf ~= current_buf and vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
-        vim.api.nvim_buf_delete(buf, { force = true })
-      end
-    end
-  end
-end, { desc = "Close Other Buffers" })
-
--- Close all buffers
-vim.keymap.set('n', '<leader>ba', function()
-  local bufnr = vim.api.nvim_get_current_buf()
-  if vim.bo[bufnr].buftype == 'terminal' then
-    vim.cmd('q')
-  else
-    for _, buf in ipairs(vim.api.nvim_list_bufs()) do
-      if vim.api.nvim_buf_is_valid(buf) and vim.bo[buf].buflisted then
-        vim.api.nvim_buf_delete(buf, { force = true })
-      end
-    end
-  end
-end, { desc = "Close All Buffers" })
+-- Buffer operations
+vim.keymap.set('n', '<leader>bd', function() pivot.close_buffer() end, { desc = "[B]uffer [D]elete" })
+vim.keymap.set('n', '<leader>sd', function() pivot.close_split() end, { desc = "[S]plit [D]elete" })
+vim.keymap.set('n', '<leader>bo', function() pivot.close_other_buffers() end, { desc = "[O]ther [B]uffers" })
+vim.keymap.set('n', '<leader>ba', function() pivot.close_all_buffers() end, { desc = "[A]ll [B]uffers" })
 
 ----------------------------------------
 -- Lazy Operations (l)

@@ -4,7 +4,6 @@ return {
   dependencies = {
     'nvim-lua/plenary.nvim',
     'nvim-treesitter/nvim-treesitter',
-    'rmagatti/auto-session',
     {
       'nvim-telescope/telescope-fzf-native.nvim',
       build = 'make',
@@ -16,6 +15,63 @@ return {
   config = function()
     local telescope = require('telescope')
     local builtin = require('telescope.builtin')
+    local actions = require('telescope.actions')
+    local action_state = require('telescope.actions.state')
+
+    -- Function to create a Telescope picker for mini.sessions
+    local function telescope_mini_sessions()
+      -- Use parent of config dir (~/.config/sessions)
+      local sessions_dir = vim.fn.fnamemodify(vim.fn.stdpath("config"), ':h') .. "/sessions"
+      local session_files = {}
+
+      -- Ensure directory exists before scanning
+      if vim.fn.isdirectory(sessions_dir) == 0 then
+        vim.notify("Session directory does not exist: " .. sessions_dir, vim.log.levels.WARN)
+        return
+      end
+
+      -- Use the new vim.fs.dir() API
+      for name, type in vim.fs.dir(sessions_dir) do
+        if type == "file" and name:match("%.vim$") then
+          local session_name = name:gsub("%.vim$", "")
+          table.insert(session_files, { display = session_name, value = session_name })
+        end
+      end
+
+      require('telescope.pickers').new({}, {
+        prompt_title = "Load Session",
+        finder = require('telescope.finders').new_table({
+          results = session_files,
+          entry_maker = function(entry)
+            return {
+              value = entry.value,
+              display = entry.display,
+              ordinal = entry.display, -- for sorting
+            }
+          end
+        }),
+        sorter = require('telescope.config').values.generic_sorter({}),
+        attach_mappings = function(prompt_bufnr, map)
+          map('i', '<CR>', function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            if selection then
+              require('mini.sessions').read(selection.value)
+            end
+          end)
+          map('n', '<CR>', function()
+            local selection = action_state.get_selected_entry()
+            actions.close(prompt_bufnr)
+            if selection then
+              require('mini.sessions').read(selection.value)
+            end
+          end)
+          -- Optional: Add mapping to delete session?
+          -- map({'i', 'n'}, '<C-d>', function() ... end)
+          return true
+        end,
+      }):find()
+    end
 
     telescope.setup({
       defaults = {
@@ -28,7 +84,6 @@ return {
 
     telescope.load_extension('fzf')
 
-    vim.opt.timeoutlen = 500
 
     -- Rest of your configuration remains the same...
     -- File pickers
@@ -63,9 +118,7 @@ return {
       })
     end, { desc = '[F]ind [N]eovim Configs' })
 
-    -- Session finder
-    vim.keymap.set('n', '<leader>fs', function()
-      require('auto-session.session-lens').search_session()
-    end, { desc = '[F]ind [S]essions' })
+    -- Custom mini.sessions Telescope picker
+    vim.keymap.set('n', '<leader>fs', telescope_mini_sessions, { desc = '[F]ind [S]essions' })
   end,
 }

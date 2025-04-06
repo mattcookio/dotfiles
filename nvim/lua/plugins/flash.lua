@@ -10,7 +10,7 @@ return {
         require("flash").jump({
           search = {
             mode = "fuzzy",
-            forward = nil,  -- nil means bidirectional
+            forward = nil, -- nil means bidirectional
           },
         })
         vim.go.ignorecase = gi
@@ -18,8 +18,8 @@ return {
       end)
 
       -- Link to existing theme highlights
-      vim.api.nvim_set_hl(0, 'FlashMatch', { link = 'Comment' })       -- dimmer, like comments
-      vim.api.nvim_set_hl(0, 'FlashLabel', { link = 'Search' })        -- prominent, like search results
+      vim.api.nvim_set_hl(0, 'FlashMatch', { link = 'Comment' }) -- dimmer, like comments
+      vim.api.nvim_set_hl(0, 'FlashLabel', { link = 'Search' })  -- prominent, like search results
     end,
     opts = {
       modes = {

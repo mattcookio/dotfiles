@@ -8,33 +8,58 @@ return {
       { "j-hui/fidget.nvim", opts = {} },
     },
     config = function()
+      -- Setup language servers.
+      -- require('lspconfig').lua_ls.setup {}
+
+      -- Configure diagnostic appearance and behavior
+      vim.diagnostic.config({
+        severity_sort = true, -- Sort diagnostics by severity
+        signs = {
+          -- Enable signs (usually true by default, but explicit is fine)
+          active = true,
+          text = {
+            [vim.diagnostic.severity.ERROR] = " ", -- Placeholder icon from original config
+            [vim.diagnostic.severity.WARN]  = " ", -- Placeholder icon from original config
+            [vim.diagnostic.severity.HINT]  = " ", -- Placeholder icon from original config
+            [vim.diagnostic.severity.INFO]  = " ", -- Placeholder icon from original config
+          },
+          texthl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+            [vim.diagnostic.severity.WARN]  = 'DiagnosticSignWarn',
+            [vim.diagnostic.severity.HINT]  = 'DiagnosticSignHint',
+            [vim.diagnostic.severity.INFO]  = 'DiagnosticSignInfo',
+          },
+          numhl = {
+            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
+            [vim.diagnostic.severity.WARN]  = 'DiagnosticSignWarn',
+            [vim.diagnostic.severity.HINT]  = 'DiagnosticSignHint',
+            [vim.diagnostic.severity.INFO]  = 'DiagnosticSignInfo',
+          },
+          -- linehl = { -- Optional: Highlight the whole line
+          --   [vim.diagnostic.severity.ERROR] = 'ErrorLine', -- Example
+          -- },
+        },
+        -- Add other configuration options as needed
+        -- virtual_text = false, -- Example: disable virtual text if desired
+        -- underline = true,
+        -- update_in_insert = false,
+      })
+
       require("mason").setup()
       require("mason-lspconfig").setup({
         automatic_installation = true,
+        ensure_installed = {},
       })
 
       -- nvim-cmp supports additional completion capabilities
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
 
-      -- Default handlers for LSP
-      local default_handlers = {
-        ["textDocument/hover"] = vim.lsp.with(
-          vim.lsp.handlers.hover,
-          { border = "rounded" }
-        ),
-        ["textDocument/signatureHelp"] = vim.lsp.with(
-          vim.lsp.handlers.signature_help,
-          { border = "rounded" }
-        ),
-      }
-
       -- Setup handler
       require("mason-lspconfig").setup_handlers({
         function(server_name)
           require("lspconfig")[server_name].setup({
             capabilities = capabilities,
-            handlers = default_handlers,
             -- Special settings for lua_ls
             settings = server_name == "lua_ls" and {
               Lua = {
@@ -49,10 +74,10 @@ return {
         end,
       })
 
-      -- Global mappings
+      -- Global mappings for diagnostics using the non-deprecated API
       vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d', vim.diagnostic.goto_prev)
-      vim.keymap.set('n', ']d', vim.diagnostic.goto_next)
+      vim.keymap.set('n', '[d', function() vim.diagnostic.jump_prev() end)
+      vim.keymap.set('n', ']d', function() vim.diagnostic.jump_next() end)
       vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
       -- Use LspAttach autocommand to only map the following keys
