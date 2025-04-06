@@ -78,32 +78,22 @@ end, { desc = '[R]eload [C]onfiguration' })
 -- Appearance Operations (a) -------
 ------------------------------------
 
--- Toggle both Goyo and Twilight
-vim.keymap.set("n", "<leader>z", function()
+-- Toggle both Goyo and Twilight together
+vim.keymap.set("n", "<leader>az", function()
   vim.cmd("Goyo")
   vim.cmd("Twilight")
-end)
+end, { desc = "Toggle Goyo and Twilight" })
 
--- Leader ag to toggle Goyo
-vim.keymap.set("n", "<leader>ag", function()
-  vim.cmd("Goyo")
-end)
-
--- Leader at to toggle Twilight
-vim.keymap.set("n", "<leader>at", function()
-  vim.cmd("Twilight")
-end)
-
--- leader an to toggle line numbers
+-- Toggle line numbers
 vim.keymap.set("n", "<leader>an", function()
-  if vim.wo.number then
-    vim.wo.number = false
-    vim.wo.relativenumber = false
+  if vim.o.number then
+    vim.o.number = false
+    vim.o.relativenumber = false
   else
-    vim.wo.number = true
-    vim.wo.relativenumber = true
+    vim.o.number = true
+    vim.o.relativenumber = true
   end
-end)
+end, { desc = "Toggle Line Numbers" })
 
 ----------------------------------------
 -- Misc.
