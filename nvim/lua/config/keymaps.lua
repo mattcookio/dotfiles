@@ -43,27 +43,6 @@ end, { desc = 'Close All Other Splits' })
 -- Buffer and Split Management
 ----------------------------------------
 
--- Load the pivot plugin (renamed from buff)
-local pivot = require('pivot')
-
--- Smart split mappings (creates new split or merges if split exists in that direction)
-vim.keymap.set('n', '<leader>sl', function() pivot.smart_split('l') end, { desc = 'Smart split right (or merge)' })
-vim.keymap.set('n', '<leader>sh', function() pivot.smart_split('h') end, { desc = 'Smart split left (or merge)' })
-vim.keymap.set('n', '<leader>sj', function() pivot.smart_split('j') end, { desc = 'Smart split down (or merge)' })
-vim.keymap.set('n', '<leader>sk', function() pivot.smart_split('k') end, { desc = 'Smart split up (or merge)' })
-
--- Move buffer to adjacent splits
-vim.keymap.set('n', '<leader>bh', function() pivot.move_buffer_to_split('h') end, { desc = '[B]uffer to Left Split' })
-vim.keymap.set('n', '<leader>bl', function() pivot.move_buffer_to_split('l') end, { desc = '[B]uffer to Right Split' })
-vim.keymap.set('n', '<leader>bj', function() pivot.move_buffer_to_split('j') end, { desc = '[B]uffer to Bottom Split' })
-vim.keymap.set('n', '<leader>bk', function() pivot.move_buffer_to_split('k') end, { desc = '[B]uffer to Top Split' })
-
--- Buffer navigation (using pivot)
-vim.keymap.set('n', '<C-h>', function() pivot.navigate_all_buffers('prev') end,
-  { noremap = true, silent = true, desc = 'Previous buffer (not in other windows)' })
-vim.keymap.set('n', '<C-l>', function() pivot.navigate_all_buffers('next') end,
-  { noremap = true, silent = true, desc = 'Next buffer (not in other windows)' })
-
 -- Basic buffer navigation with Alt/Option keys
 vim.keymap.set('n', '˙', '<cmd>bprevious!<CR>', { noremap = true, silent = true }) -- Mac Option-h
 vim.keymap.set('n', '¬', '<cmd>bnext!<CR>', { noremap = true, silent = true }) -- Mac Option-l
@@ -76,11 +55,6 @@ vim.keymap.set('n', '<D-C-l>', '<C-w>l', { desc = 'Move to right split' })
 vim.keymap.set('n', '<D-C-k>', '<C-w>k', { desc = 'Move to upper split' })
 vim.keymap.set('n', '<D-C-j>', '<C-w>j', { desc = 'Move to lower split' })
 
--- Buffer operations
-vim.keymap.set('n', '<leader>bd', function() pivot.close_buffer() end, { desc = "[B]uffer [D]elete" })
-vim.keymap.set('n', '<leader>sd', function() pivot.close_split() end, { desc = "[S]plit [D]elete" })
-vim.keymap.set('n', '<leader>bo', function() pivot.close_other_buffers() end, { desc = "[O]ther [B]uffers" })
-vim.keymap.set('n', '<leader>ba', function() pivot.close_all_buffers() end, { desc = "[A]ll [B]uffers" })
 
 ----------------------------------------
 -- Lazy Operations (l)
