@@ -2,7 +2,7 @@ return {
   {
     "folke/flash.nvim",
     config = function()
-      vim.keymap.set({ "n", "x", "o" }, "m", function()
+      vim.keymap.set({ "n", "x", "o" }, "<CR>", function()
         local gi = vim.go.ignorecase
         local gs = vim.go.smartcase
         vim.go.ignorecase = true
@@ -15,7 +15,7 @@ return {
         })
         vim.go.ignorecase = gi
         vim.go.smartcase = gs
-      end)
+      end, { desc = "Flash jump" })
 
       -- Link to existing theme highlights
       vim.api.nvim_set_hl(0, 'FlashMatch', { link = 'Comment' }) -- dimmer, like comments
