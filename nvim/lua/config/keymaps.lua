@@ -101,3 +101,10 @@ end, { desc = "Toggle Line Numbers" })
 
 vim.keymap.set("v", "<Tab>", ">gv")   -- Tab to indent in visual mode
 vim.keymap.set("v", "<S-Tab>", "<gv") -- Shift-Tab to unindent in visual mode
+
+----------------------------------------
+-- Highlight Operations (h)
+----------------------------------------
+
+-- Clear search highlights
+vim.keymap.set('n', '<leader>hd', '<cmd>nohlsearch<cr>', { desc = '[H]ighlight [D]elete', silent = true })

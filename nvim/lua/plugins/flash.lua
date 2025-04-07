@@ -2,7 +2,7 @@ return {
   {
     "folke/flash.nvim",
     config = function()
-      vim.keymap.set({ "n", "x", "o" }, "<CR>", function()
+      vim.keymap.set({ "n", "x", "o" }, "<C-Space>", function()
         local gi = vim.go.ignorecase
         local gs = vim.go.smartcase
         vim.go.ignorecase = true
