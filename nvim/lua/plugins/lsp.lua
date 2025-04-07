@@ -6,22 +6,24 @@ return {
       "williamboman/mason.nvim",
       "williamboman/mason-lspconfig.nvim",
       { "j-hui/fidget.nvim", opts = {} },
+      "saghen/blink.cmp",
     },
     config = function()
-      -- Setup language servers.
-      -- require('lspconfig').lua_ls.setup {}
-
       -- Configure diagnostic appearance and behavior
       vim.diagnostic.config({
-        severity_sort = true, -- Sort diagnostics by severity
+        severity_sort = true,
+        virtual_text = {
+          source = "if_many",
+          prefix = "●",
+          spacing = 4
+        },
         signs = {
-          -- Enable signs (usually true by default, but explicit is fine)
           active = true,
           text = {
-            [vim.diagnostic.severity.ERROR] = " ", -- Placeholder icon from original config
-            [vim.diagnostic.severity.WARN]  = " ", -- Placeholder icon from original config
-            [vim.diagnostic.severity.HINT]  = " ", -- Placeholder icon from original config
-            [vim.diagnostic.severity.INFO]  = " ", -- Placeholder icon from original config
+            [vim.diagnostic.severity.ERROR] = " ",
+            [vim.diagnostic.severity.WARN]  = " ",
+            [vim.diagnostic.severity.HINT]  = " ",
+            [vim.diagnostic.severity.INFO]  = " ",
           },
           texthl = {
             [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
@@ -35,53 +37,31 @@ return {
             [vim.diagnostic.severity.HINT]  = 'DiagnosticSignHint',
             [vim.diagnostic.severity.INFO]  = 'DiagnosticSignInfo',
           },
-          -- linehl = { -- Optional: Highlight the whole line
-          --   [vim.diagnostic.severity.ERROR] = 'ErrorLine', -- Example
-          -- },
         },
-        -- Add other configuration options as needed
-        -- virtual_text = false, -- Example: disable virtual text if desired
-        -- underline = true,
-        -- update_in_insert = false,
       })
 
+      -- Setup Mason and automatic LSP installation
       require("mason").setup()
       require("mason-lspconfig").setup({
         automatic_installation = true,
-        ensure_installed = {},
       })
 
-      -- nvim-cmp supports additional completion capabilities
-      local capabilities = vim.lsp.protocol.make_client_capabilities()
-      capabilities = require('cmp_nvim_lsp').default_capabilities(capabilities)
+      -- Use blink.cmp's LSP capabilities
+      local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      -- Setup handler
+      -- Setup automatic LSP configuration
       require("mason-lspconfig").setup_handlers({
         function(server_name)
           require("lspconfig")[server_name].setup({
             capabilities = capabilities,
-            -- Special settings for lua_ls
-            settings = server_name == "lua_ls" and {
-              Lua = {
-                diagnostics = { globals = { "vim" } },
-                workspace = {
-                  library = vim.api.nvim_get_runtime_file("", true),
-                  checkThirdParty = false,
-                }
-              }
-            } or nil
           })
         end,
       })
 
-      -- Global mappings for diagnostics using the non-deprecated API
+      -- Global mappings for diagnostics
       vim.keymap.set('n', '<leader>e', vim.diagnostic.open_float)
-      vim.keymap.set('n', '[d', function() vim.diagnostic.jump_prev() end)
-      vim.keymap.set('n', ']d', function() vim.diagnostic.jump_next() end)
-      vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist)
 
-      -- Use LspAttach autocommand to only map the following keys
-      -- after the language server attaches to the current buffer
+      -- LSP keymaps
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('UserLspConfig', {}),
         callback = function(ev)
@@ -104,59 +84,6 @@ return {
             vim.lsp.buf.format { async = true }
           end, opts)
         end,
-      })
-    end
-  },
-
-  -- Autocompletion
-  {
-    "hrsh7th/nvim-cmp",
-    dependencies = {
-      "hrsh7th/cmp-nvim-lsp",
-      "hrsh7th/cmp-buffer",
-      "hrsh7th/cmp-path",
-      "L3MON4D3/LuaSnip",
-      "saadparwaiz1/cmp_luasnip",
-    },
-    config = function()
-      local cmp = require("cmp")
-      local luasnip = require("luasnip")
-
-      cmp.setup({
-        snippet = {
-          expand = function(args)
-            luasnip.lsp_expand(args.body)
-          end,
-        },
-        mapping = cmp.mapping.preset.insert({
-          ['<C-d>'] = cmp.mapping.scroll_docs(-4),
-          ['<C-f>'] = cmp.mapping.scroll_docs(4),
-          ['<C-Space>'] = cmp.mapping.complete(),
-          ['<CR>'] = cmp.mapping.confirm {
-            behavior = cmp.ConfirmBehavior.Replace,
-            select = true,
-          },
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.expand_or_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-          ['<S-Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.jumpable(-1) then
-              luasnip.jump(-1)
-            else
-              fallback()
-            end
-          end, { 'i', 's' }),
-        }),
-        sources = {
-          { name = 'nvim_lsp' },
-          { name = 'luasnip' },
-          { name = 'buffer' },
-          { name = 'path' },
-        },
       })
     end
   }
