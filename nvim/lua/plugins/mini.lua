@@ -43,6 +43,8 @@ return {
       require('mini.comment').setup()
       require('mini.pairs').setup()
       require('mini.comment').setup()
+      require('mini.diff').setup()
+      require('mini.git').setup()
       require('mini.icons').setup()
       local jump = require('mini.jump')
       jump.setup({
