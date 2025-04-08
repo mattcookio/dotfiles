@@ -13,6 +13,20 @@ return {
         autowrite = true,
       })
 
+      vim.keymap.set('n', '<leader>sn', function()
+        local cwd = vim.fn.getcwd()
+        local name = vim.fn.fnamemodify(cwd, ':t')
+        if name == '' or name == '/' then
+          name = vim.fn.input('Session name: ')
+        end
+        if name ~= '' then -- Ensure name is not empty after potential input cancellation
+          require('mini.sessions').write(name)
+          vim.notify("Wrote session: " .. name, vim.log.levels.INFO)
+        else
+          vim.notify("Session write cancelled.", vim.log.levels.WARN)
+        end
+      end, { noremap = true, silent = true, desc = "Session: New/Write CWD or Prompt" })
+
       local starter = require('mini.starter')
       -- Basic starter setup with default sections
       starter.setup({
