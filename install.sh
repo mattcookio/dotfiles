@@ -20,10 +20,17 @@ mkdir -p ~/.config
 echo "Removing existing symlinks..."
 rm -rf ~/.config/nvim
 rm -rf ~/.config/alacritty
+rm -rf ~/.config/oh-my-zsh
 
 # Create new symlinks for entire directories
 echo "Creating new symlinks..."
 ln -s "$(pwd)/nvim" ~/.config/nvim
 ln -s "$(pwd)/alacritty" ~/.config/alacritty
+ln -s "$(pwd)/oh-my-zsh" ~/.config/oh-my-zsh
 
-echo "✅ Configuration directories have been symlinked successfully!"
+# Symlink .zshrc
+echo "Symlinking .zshrc to home directory..."
+rm -f ~/.zshrc # Remove existing file or symlink if it exists
+ln -s "$(pwd)/.zshrc" ~/.zshrc
+
+echo "✅ Configuration files and directories have been symlinked successfully!"

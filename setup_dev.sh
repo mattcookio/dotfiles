@@ -24,6 +24,18 @@ if ! ./install.sh; then
     handle_error "Failed to set up configuration files"
 fi
 
+# Install Oh My Zsh if not already installed
+echo "Checking Oh My Zsh installation..."
+if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    echo "Installing Oh My Zsh..."
+    # Run Oh My Zsh install script non-interactively
+    # Setting CHSH=no prevents the script from trying to change the default shell
+    # Setting RUNZSH=no prevents the script from trying to run zsh at the end
+    CHSH=no RUNZSH=no sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended || handle_error "Failed to install Oh My Zsh"
+else
+    echo "Oh My Zsh already installed."
+fi
+
 # Install basic development tools
 echo "Installing development tools..."
 # CLI tools
