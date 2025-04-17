@@ -39,7 +39,7 @@ fi
 # Install basic development tools
 echo "Installing development tools..."
 # CLI tools
-for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx; do
+for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggestions zsh-syntax-highlighting; do
     echo "Installing $tool..."
     brew install $tool || handle_error "Failed to install $tool"
 done
@@ -55,6 +55,28 @@ for font in font-jetbrains-mono-nerd-font font-jetbrains-mono; do
     echo "Installing $font..."
     brew install --cask $font || handle_error "Failed to install $font"
 done
+
+# Install Oh My Zsh plugins - Removing manual clones for brew versions
+echo "Installing Oh My Zsh plugins..."
+ZSH_CUSTOM=${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}
+PLUGINS_DIR="$ZSH_CUSTOM/plugins"
+mkdir -p $PLUGINS_DIR
+
+# zsh-autosuggestions - Now handled by Homebrew
+# if [ ! -d "$PLUGINS_DIR/zsh-autosuggestions" ]; then
+#     echo "Installing zsh-autosuggestions..."
+#     git clone https://github.com/zsh-users/zsh-autosuggestions $PLUGINS_DIR/zsh-autosuggestions || handle_error "Failed to clone zsh-autosuggestions"
+# else
+#     echo "zsh-autosuggestions already installed."
+# fi
+
+# zsh-syntax-highlighting - Now handled by Homebrew
+# if [ ! -d "$PLUGINS_DIR/zsh-syntax-highlighting" ]; then
+#     echo "Installing zsh-syntax-highlighting..."
+#     git clone https://github.com/zsh-users/zsh-syntax-highlighting.git $PLUGINS_DIR/zsh-syntax-highlighting || handle_error "Failed to clone zsh-syntax-highlighting"
+# else
+#     echo "zsh-syntax-highlighting already installed."
+# fi
 
 # Install Poetry for Python
 echo "Installing Poetry..."
