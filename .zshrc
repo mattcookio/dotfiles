@@ -28,7 +28,7 @@ plugins=(
   gh                      # GitHub CLI integration
   docker                  # Docker completion and aliases
   docker-compose          # Docker Compose completion
-  dotenv                  # Load .env files automatically
+  # dotenv                  # Load .env files automatically
   golang                  # Go toolchain helpers
   node                    # Node.js helpers (nvm, etc.)
   npm                     # NPM completion
@@ -92,6 +92,10 @@ fi
 
 # Add Node Version Manager (n) bin to PATH if not already present
 [[ ":$PATH:" == *":${N_PREFIX}/bin:"* ]] || export PATH="${N_PREFIX}/bin:$PATH"
+# Add Go bin directory to PATH if it's not already there
+if [[ ":$PATH:" != *":$(go env GOPATH)/bin:"* ]]; then
+  export PATH="${PATH}:$(go env GOPATH)/bin"
+fi
 
 # --------------------
 # Load Oh My Zsh
@@ -132,3 +136,13 @@ fi
 
 # OR just place custom aliases, functions, or settings below this line
 # alias ll='ls -alF'
+
+# pnpm
+export PNPM_HOME="/Users/mc/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
+
+PATH=~/.console-ninja/.bin:$PATH
