@@ -8,6 +8,7 @@ decorations = "buttonless"
 blur = true
 opacity = 0.9
 padding = { x = 20, y = 20 }
+option_as_alt = "OnlyLeft"
 
 [colors.primary]
 background = "#282828"

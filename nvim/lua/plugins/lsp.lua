@@ -42,20 +42,20 @@ return {
 
       -- Setup Mason and automatic LSP installation
       require("mason").setup()
-      require("mason-lspconfig").setup({
-        automatic_installation = true,
-      })
 
       -- Use blink.cmp's LSP capabilities
       local capabilities = require('blink.cmp').get_lsp_capabilities()
 
       -- Setup automatic LSP configuration
-      require("mason-lspconfig").setup_handlers({
-        function(server_name)
-          require("lspconfig")[server_name].setup({
-            capabilities = capabilities,
-          })
-        end,
+      require("mason-lspconfig").setup({
+        automatic_installation = true,
+        handlers = {
+          function(server_name)
+            require("lspconfig")[server_name].setup({
+              capabilities = capabilities,
+            })
+          end,
+        },
       })
 
       -- Global mappings for diagnostics
