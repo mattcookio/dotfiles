@@ -76,6 +76,16 @@ if [[ ":$PATH:" != *":$(go env GOPATH)/bin:"* ]]; then
   export PATH="${PATH}:$(go env GOPATH)/bin"
 fi
 
+# Node.js package managers
+export PNPM_HOME="~/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+
+export BUN_INSTALL="$HOME/.bun"
+export PATH="$BUN_INSTALL/bin:$PATH"
+
 # --------------------
 # Load Oh My Zsh
 # --------------------
@@ -95,3 +105,30 @@ fi
 if [ -f "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
   source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
+
+# Git aliases
+alias gcmsgn="git commit -n -m"
+alias yeet="git commit -n --allow-empty -m"
+
+# Development tools
+alias code='code-insiders'
+alias claude="~/.claude/local/claude"
+alias dkill='docker kill $(docker ps -q)'
+alias dcu="docker-compose up -d"
+
+# Bun completions
+[ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
+
+# ZSH completions
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+# Init
+
+# Zsh Options (setopt)
+
+# History
+setopt SHARE_HISTORY         # Share history between running shells
+setopt HIST_IGNORE_ALL_DUPS  # Remove older duplicate entries from history
+setopt HIST_SAVE_NO_DUPS     # Don't save duplicates to the history file
+setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first when trimming history
+unsetopt HIST_IGNORE_DUPS    # Needed for HIST_IGNORE_ALL_DUPS to work correctly
