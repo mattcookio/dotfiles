@@ -106,29 +106,43 @@ if [ -f "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.
   source "$(brew --prefix)/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 fi
 
-# Git aliases
-alias gcmsgn="git commit -n -m"
-alias yeet="git commit -n --allow-empty -m"
+# --------------------
+# Shell Options
+# --------------------
 
-# Development tools
-alias code='code-insiders'
-alias claude="~/.claude/local/claude"
-alias dkill='docker kill $(docker ps -q)'
-alias dcu="docker-compose up -d"
-
-# Bun completions
-[ -s "~/.bun/_bun" ] && source "~/.bun/_bun"
-
-# ZSH completions
-fpath+=~/.zfunc; autoload -Uz compinit; compinit
-
-# Init
-
-# Zsh Options (setopt)
-
-# History
+# History settings
 setopt SHARE_HISTORY         # Share history between running shells
 setopt HIST_IGNORE_ALL_DUPS  # Remove older duplicate entries from history
 setopt HIST_SAVE_NO_DUPS     # Don't save duplicates to the history file
 setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicates first when trimming history
 unsetopt HIST_IGNORE_DUPS    # Needed for HIST_IGNORE_ALL_DUPS to work correctly
+
+# --------------------
+# Completions
+# --------------------
+
+# ZSH completions
+fpath+=~/.zfunc; autoload -Uz compinit; compinit
+
+# Bun completions
+[ -s "$HOME/.bun/_bun" ] && source "$HOME/.bun/_bun"
+
+# --------------------
+# Aliases
+# --------------------
+
+# Git aliases
+alias gcmsgn="git commit -n -m"
+alias yeet="git commit -n --allow-empty -m"
+
+# Development tools
+alias dkill='docker kill $(docker ps -q)'
+alias dcu="docker-compose up -d"
+alias claude="$HOME/.claude/local/claude"
+
+# --------------------
+# Local Configuration
+# --------------------
+
+# Source local configuration if it exists
+[[ -f ~/local.zsh ]] && . ~/local.zsh

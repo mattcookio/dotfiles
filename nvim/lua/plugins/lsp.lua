@@ -1,4 +1,4 @@
--- plugins/lsp.lua
+-- plugins/lsp.lu-- plugins/lsp.lu-- plugins/lsp.l-- plugins/lsp.lua
 return {
   {
     "neovim/nvim-lspconfig",
@@ -17,45 +17,76 @@ return {
           prefix = "●",
           spacing = 4
         },
-        signs = {
-          active = true,
-          text = {
-            [vim.diagnostic.severity.ERROR] = " ",
-            [vim.diagnostic.severity.WARN]  = " ",
-            [vim.diagnostic.severity.HINT]  = " ",
-            [vim.diagnostic.severity.INFO]  = " ",
-          },
-          texthl = {
-            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
-            [vim.diagnostic.severity.WARN]  = 'DiagnosticSignWarn',
-            [vim.diagnostic.severity.HINT]  = 'DiagnosticSignHint',
-            [vim.diagnostic.severity.INFO]  = 'DiagnosticSignInfo',
-          },
-          numhl = {
-            [vim.diagnostic.severity.ERROR] = 'DiagnosticSignError',
-            [vim.diagnostic.severity.WARN]  = 'DiagnosticSignWarn',
-            [vim.diagnostic.severity.HINT]  = 'DiagnosticSignHint',
-            [vim.diagnostic.severity.INFO]  = 'DiagnosticSignInfo',
-          },
-        },
+        signs = true,
       })
 
-      -- Setup Mason and automatic LSP installation
+      -- Setup Mason first
       require("mason").setup()
 
-      -- Use blink.cmp's LSP capabilities
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      -- Get capabilities
+      local capabilities = vim.lsp.protocol.make_client_capabilities()
+      local ok, blink = pcall(require, 'blink.cmp')
+      if ok then
+        capabilities = blink.get_lsp_capabilities(capabilities)
+      end
 
-      -- Setup automatic LSP configuration
-      require("mason-lspconfig").setup({
+      -- Setup mason-lspconfig with automatic installation
+      local mason_lspconfig = require("mason-lspconfig")
+      mason_lspconfig.setup({
+        -- Automatically install LSPs to stdpath for neovim
         automatic_installation = true,
-        handlers = {
-          function(server_name)
-            require("lspconfig")[server_name].setup({
-              capabilities = capabilities,
-            })
-          end,
+        ensure_installed = {}, -- Let it auto-detect based on filetypes
+      })
+
+      -- Define server configurations
+      local servers = {
+        lua_ls = {
+          settings = {
+            Lua = {
+              diagnostics = { globals = { "vim" } },
+              workspace = { 
+                library = vim.api.nvim_get_runtime_file("", true),
+                checkThirdParty = false,
+              },
+              telemetry = { enable = false },
+            },
+          },
         },
+      }
+
+      -- Setup each server
+      local lspconfig = require("lspconfig")
+      
+      -- Get all available servers from mason-lspconfig
+      local installed_servers = mason_lspconfig.get_installed_servers()
+      
+      -- Setup function for servers
+      local function setup_server(server_name)
+        local server_opts = {
+          capabilities = capabilities,
+        }
+        
+        -- Merge custom settings if they exist
+        if servers[server_name] then
+          server_opts = vim.tbl_deep_extend("force", server_opts, servers[server_name])
+        end
+        
+        lspconfig[server_name].setup(server_opts)
+      end
+
+      -- Setup all installed servers
+      for _, server_name in ipairs(installed_servers) do
+        setup_server(server_name)
+      end
+
+      -- Auto-setup servers when they are installed
+      vim.api.nvim_create_autocmd("User", {
+        pattern = "MasonToolsUpdateCompleted",
+        callback = function()
+          for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
+            setup_server(server_name)
+          end
+        end,
       })
 
       -- Global mappings for diagnostics
@@ -88,3 +119,4 @@ return {
     end
   }
 }
+
