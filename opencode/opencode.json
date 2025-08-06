@@ -18,5 +18,15 @@
     "docs/ai-instructions.md",
     "docs/development-guidelines.md",
     "README.md"
-  ]
+  ],
+  "mcpServers": {
+    "context7": {
+      "command": "npx",
+      "args": ["-y", "@context7/mcp-server"]
+    },
+    "puppeteer": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+    }
+  }
 }
