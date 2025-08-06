@@ -19,14 +19,14 @@
     "docs/development-guidelines.md",
     "README.md"
   ],
-  "mcpServers": {
+  "mcp": {
     "context7": {
-      "command": "npx",
-      "args": ["-y", "@context7/mcp-server"]
+      "type": "local",
+      "command": ["npx", "-y", "@context7/mcp-server"]
     },
     "puppeteer": {
-      "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-puppeteer"]
+      "type": "local",
+      "command": ["npx", "-y", "@modelcontextprotocol/server-puppeteer"]
     }
   }
 }
