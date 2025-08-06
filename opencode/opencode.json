@@ -1,0 +1,22 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "instructions": [
+    "AGENTS.md",
+    "agents.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "OPENAI.md",
+    ".claude/settings.json",
+    ".cursor/rules/*.md",
+    ".cursor/rules/*.mdc",
+    ".cursor/rules/instructions.md",
+    ".cursor/rules/instructions.mdc",
+    ".github/copilot-instructions.md",
+    ".github/COPILOT_INSTRUCTIONS.md",
+    ".opencode/rules.md",
+    ".opencode/instructions.md",
+    "docs/ai-instructions.md",
+    "docs/development-guidelines.md",
+    "README.md"
+  ]
+}
