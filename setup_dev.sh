@@ -45,7 +45,7 @@ for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggest
 done
 
 # GUI applications
-for app in alacritty karabiner-elements; do
+for app in ghostty karabiner-elements; do
     echo "Installing $app..."
     brew install --cask $app || handle_error "Failed to install $app"
 done
