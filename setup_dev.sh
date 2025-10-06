@@ -110,6 +110,9 @@ if [ -f "$CLAUDE_BIN" ]; then
     echo "Adding Context7 MCP server..."
     "$CLAUDE_BIN" mcp add context7 "npx -y mcp-remote https://mcp.context7.com/sse" --scope user || handle_error "Failed to add Context7 MCP server"
 
+    echo "Adding Neon MCP server..."
+    "$CLAUDE_BIN" mcp add Neon "npx -y mcp-remote@latest https://mcp.neon.tech/mcp" --scope user || handle_error "Failed to add Neon MCP server"
+
     echo "✅ Claude Code MCP servers configured"
 else
     handle_error "Claude Code CLI not found at $CLAUDE_BIN - skipping MCP server configuration"

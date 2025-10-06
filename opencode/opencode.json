@@ -8,6 +8,10 @@
     "playwright": {
       "type": "local",
       "command": ["npx", "-y", "@playwright/mcp@latest"]
+    },
+    "Neon": {
+      "type": "local",
+      "command": ["npx", "-y", "mcp-remote@latest", "https://mcp.neon.tech/mcp"]
     }
   }
 }
