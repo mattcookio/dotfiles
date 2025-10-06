@@ -45,7 +45,7 @@ for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggest
 done
 
 # GUI applications
-for app in alacritty vscodium karabiner-elements; do
+for app in alacritty karabiner-elements; do
     echo "Installing $app..."
     brew install --cask $app || handle_error "Failed to install $app"
 done
@@ -98,6 +98,21 @@ if ! command -v nvim &> /dev/null; then
 else
     NVIM_VERSION=$(nvim --version | head -n 1)
     echo "✅ Neovim installed: $NVIM_VERSION"
+fi
+
+# Configure Claude Code MCP servers
+echo "Configuring Claude Code MCP servers..."
+CLAUDE_BIN="$HOME/.claude/local/claude"
+if [ -f "$CLAUDE_BIN" ]; then
+    echo "Adding Playwright MCP server..."
+    "$CLAUDE_BIN" mcp add playwright "npx -y @playwright/mcp@latest" --scope user || handle_error "Failed to add Playwright MCP server"
+
+    echo "Adding Context7 MCP server..."
+    "$CLAUDE_BIN" mcp add context7 "npx -y mcp-remote https://mcp.context7.com/sse" --scope user || handle_error "Failed to add Context7 MCP server"
+
+    echo "✅ Claude Code MCP servers configured"
+else
+    handle_error "Claude Code CLI not found at $CLAUDE_BIN - skipping MCP server configuration"
 fi
 
 # Report any errors at the end
