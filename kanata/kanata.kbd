@@ -1,0 +1,97 @@
+;; Kanata configuration with homerow mods
+;; This config implements QMK-style homerow modifiers
+
+(defcfg
+  ;; For MacOS
+  process-unmapped-keys yes
+  danger-enable-cmd yes
+  sequence-timeout 2000
+  sequence-input-mode visible-backspaced
+  sequence-backtrack-modcancel no
+)
+
+(defsrc
+  a    s    d    f    g    h    j    k    l    ;    spc   caps
+)
+
+(deflayer base
+  @a_shft  (chord combos s)  (chord combos d)  (chord combos f)  g
+  h  (chord combos j)  (chord combos k)  (chord combos l)  @;_shft  @spc  @caps
+)
+
+(deflayer brackets
+  a    S-[  [    S-9  g    h    S-0  ]    S-]  ;    _     caps
+)
+
+(deflayer navigation
+  _    _    _    _    _    left down up   rght _    _     _
+)
+
+;; Chords (simultaneous key presses)
+(defchords combos 50
+  (s) @s_ctrl
+  (d) @d_alt
+  (f) @f_cmd
+  (j) @j_cmd
+  (k) @k_alt
+  (l) @l_ctrl
+  (d f) esc
+  (j k) ret
+)
+
+;; Left hand homerow mods
+(defalias
+  a_shft (tap-hold 150 150 a lsft)
+  s_ctrl (tap-hold 150 150 s lctl)
+  d_alt (tap-hold 150 150 d lalt)
+  f_cmd (tap-hold 150 150 f lmet)
+)
+
+;; Right hand homerow mods
+(defalias
+  j_cmd (tap-hold 150 150 j rmet)
+  k_alt (tap-hold 150 150 k ralt)
+  l_ctrl (tap-hold 150 150 l rctl)
+  ;_shft (tap-hold 150 150 ; rsft)
+)
+
+;; Caps Lock: tap = backspace, hold = navigation layer
+(defalias
+  caps (tap-hold 150 150 bspc (layer-while-held navigation))
+)
+
+;; Spacebar activates brackets layer when held
+(defalias
+  spc (tap-hold 150 150 spc (layer-while-held brackets))
+)
+
+;; Notes:
+;; - tap-hold format: (tap-hold tap-timeout hold-timeout tap-action hold-action)
+;; - 150ms timeout provides a good balance for most typists
+;; - lmet/rmet = Command key on Mac (Meta/Super)
+;; - lctl/rctl = Control
+;; - lalt/ralt = Option/Alt
+;; - lsft/rsft = Shift
+;;
+;; Key chords (press simultaneously):
+;; - D+F = Escape
+;; - J+K = Enter
+;;
+;; Caps Lock remapping:
+;; - Tap: Backspace
+;; - Hold: Navigation layer (HJKL become arrow keys)
+;;
+;; Navigation layer (hold Caps Lock):
+;; - H = Left
+;; - J = Down
+;; - K = Up
+;; - L = Right
+;;
+;; Brackets layer (activated by holding spacebar):
+;; - Left hand: S={, D=[, F=(
+;; - Right hand: J=), K=], L=}
+;;
+;; Adjust the timing values if you experience:
+;; - Accidental modifier activation: increase tap-timeout
+;; - Delayed character input: decrease tap-timeout
+;; - Modifier not triggering: decrease hold-timeout

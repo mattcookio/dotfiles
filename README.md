@@ -18,6 +18,7 @@ cd dotfiles
 
 - [Alacritty](./alacritty/README.md) - Terminal emulator configuration
 - [Neovim](./nvim/README.md) - Text editor configuration
+- [Kanata](./kanata/README.md) - Advanced keyboard remapping with homerow mods
 
 ## Installation Scripts
 
