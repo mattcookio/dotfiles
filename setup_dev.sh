@@ -39,7 +39,7 @@ fi
 # Install basic development tools
 echo "Installing development tools..."
 # CLI tools
-for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggestions zsh-syntax-highlighting; do
+for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggestions zsh-syntax-highlighting neonctl; do
     echo "Installing $tool..."
     brew install $tool || handle_error "Failed to install $tool"
 done
@@ -91,23 +91,9 @@ else
     echo "✅ Neovim installed: $NVIM_VERSION"
 fi
 
-# Configure Claude Code MCP servers
-echo "Configuring Claude Code MCP servers..."
-CLAUDE_BIN="$HOME/.claude/local/claude"
-if [ -f "$CLAUDE_BIN" ]; then
-    echo "Adding Playwright MCP server..."
-    "$CLAUDE_BIN" mcp add playwright "npx -y @playwright/mcp@latest" --scope user || handle_error "Failed to add Playwright MCP server"
-
-    echo "Adding Context7 MCP server..."
-    "$CLAUDE_BIN" mcp add context7 "npx -y mcp-remote https://mcp.context7.com/sse" --scope user || handle_error "Failed to add Context7 MCP server"
-
-    echo "Adding Neon MCP server..."
-    "$CLAUDE_BIN" mcp add Neon "npx -y mcp-remote@latest https://mcp.neon.tech/mcp" --scope user || handle_error "Failed to add Neon MCP server"
-
-    echo "✅ Claude Code MCP servers configured"
-else
-    handle_error "Claude Code CLI not found at $CLAUDE_BIN - skipping MCP server configuration"
-fi
+# Note: Claude MCP servers are configured via ~/.config/claude/config.json
+# which is symlinked from the dotfiles/claude directory by install.sh
+echo "✅ Claude MCP configuration will be available after symlinking (via install.sh)"
 
 # Report any errors at the end
 if [ ${#ERRORS[@]} -ne 0 ]; then
