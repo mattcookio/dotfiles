@@ -4,9 +4,6 @@ bold = { family = "JetBrainsMono Nerd Font", style = "Bold" }
 size = 12
 
 [window]
-decorations = "buttonless"
-blur = true
-opacity = 0.9
 padding = { x = 20, y = 20 }
 option_as_alt = "OnlyLeft"
 

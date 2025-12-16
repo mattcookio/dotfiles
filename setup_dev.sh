@@ -39,25 +39,16 @@ fi
 # Install basic development tools
 echo "Installing development tools..."
 # CLI tools
-for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggestions zsh-syntax-highlighting kanata; do
+for tool in git neovim ripgrep fd fzf lazygit n go luarocks pipx zsh-autosuggestions zsh-syntax-highlighting; do
     echo "Installing $tool..."
     brew install $tool || handle_error "Failed to install $tool"
 done
 
 # GUI applications
-for app in ghostty karabiner-elements; do
+for app in ghostty; do
     echo "Installing $app..."
     brew install --cask $app || handle_error "Failed to install $app"
 done
-
-# Post-install note for Karabiner
-echo ""
-echo "⚠️  IMPORTANT: Karabiner-Elements has been installed for its virtual HID driver."
-echo "Please:"
-echo "  1. Open Karabiner-Elements from Applications"
-echo "  2. Go to System Settings → Privacy & Security and allow the system extension"
-echo "  3. QUIT Karabiner-Elements completely (we only need the driver)"
-echo ""
 
 # Fonts
 for font in font-jetbrains-mono-nerd-font font-jetbrains-mono; do
@@ -128,17 +119,3 @@ if [ ${#ERRORS[@]} -ne 0 ]; then
 else
     echo -e "\n✅ Development environment setup complete!"
 fi
-
-# Kanata setup instructions
-echo ""
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo "📋 Next Steps for Kanata Setup:"
-echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
-echo ""
-echo "1. Follow the Karabiner-Elements setup instructions above"
-echo "2. Run the Kanata daemon setup:"
-echo "   cd ~/Code/dotfiles"
-echo "   ./kanata/setup_kanata_daemon.sh"
-echo ""
-echo "See kanata/README.md for full documentation"
-echo ""
