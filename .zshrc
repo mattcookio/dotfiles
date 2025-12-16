@@ -77,7 +77,7 @@ if [[ ":$PATH:" != *":$(go env GOPATH)/bin:"* ]]; then
 fi
 
 # Node.js package managers
-export PNPM_HOME="~/Library/pnpm"
+export PNPM_HOME="$HOME/Library/pnpm"
 case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
@@ -86,9 +86,10 @@ esac
 export BUN_INSTALL="$HOME/.bun"
 export PATH="$BUN_INSTALL/bin:$PATH"
 
-# Added by LM Studio CLI (lms)
-export PATH="$PATH:/Users/mattcook/.lmstudio/bin"
-# End of LM Studio CLI section
+# Additional tools
+export PATH="$PATH:$HOME/.lmstudio/bin"      # LM Studio CLI
+export PATH="$PATH:$HOME/.local/bin"         # pipx binaries
+export PATH="$PATH:/usr/local/share/dotnet"  # .NET SDK
 
 # --------------------
 # Load Oh My Zsh
@@ -144,10 +145,16 @@ alias dkill='docker kill $(docker ps -q)'
 alias dcu="docker-compose up -d"
 alias claude="$HOME/.claude/local/claude"
 
+# Nuclear option: completely clean Docker system
+alias dnuke='docker stop $(docker ps -aq) 2>/dev/null; \
+  docker rm $(docker ps -aq) 2>/dev/null; \
+  docker volume rm $(docker volume ls -q) 2>/dev/null; \
+  docker network prune -f; \
+  docker image rm $(docker images -aq) -f 2>/dev/null; \
+  docker system prune -a --volumes -f'
 # --------------------
 # Local Configuration
 # --------------------
 
 # Source local configuration if it exists
 [[ -f ~/local.zsh ]] && . ~/local.zsh
-
