@@ -39,20 +39,8 @@ return {
       })
 
       -- Define server configurations
-      local servers = {
-        lua_ls = {
-          settings = {
-            Lua = {
-              diagnostics = { globals = { "vim" } },
-              workspace = { 
-                library = vim.api.nvim_get_runtime_file("", true),
-                checkThirdParty = false,
-              },
-              telemetry = { enable = false },
-            },
-          },
-        },
-      }
+      -- Note: lua_ls is configured via lazydev.nvim plugin
+      local servers = {}
 
       -- Setup each server
       local lspconfig = require("lspconfig")
