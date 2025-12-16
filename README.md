@@ -16,9 +16,9 @@ cd dotfiles
 
 ## Configuration Directories
 
-- [Ghostty](./ghostty/) - Terminal emulator configuration
 - [Neovim](./nvim/README.md) - Text editor configuration
-- [Kanata](./kanata/README.md) - Advanced keyboard remapping with homerow mods
+- [Alacritty](./alacritty/) - Terminal emulator configuration
+- [Claude](./claude/) - Claude Code configuration with hooks
 
 ## Installation Scripts
 
