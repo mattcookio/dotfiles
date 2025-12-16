@@ -47,3 +47,6 @@ data
 .env
 .env.local
 Session.vim
+
+# Claude Code local settings (machine-specific)
+.claude/settings.local.json
