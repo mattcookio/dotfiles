@@ -1,3 +1,17 @@
 {
-  "mcpServers": {}
+  "mcpServers": {},
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.config/claude/hooks/check-claude-citations.sh",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
 }
