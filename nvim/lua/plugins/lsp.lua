@@ -31,34 +31,22 @@ return {
       end
 
       -- Setup mason-lspconfig with automatic installation
-      local mason_lspconfig = require("mason-lspconfig")
-      mason_lspconfig.setup({
+      require("mason-lspconfig").setup({
         -- Automatically install LSPs to stdpath for neovim
         automatic_installation = true,
         ensure_installed = {}, -- Let it auto-detect based on filetypes
-      })
+        handlers = {
+          -- Default handler for all servers
+          function(server_name)
+            local server_opts = {
+              capabilities = capabilities,
+            }
 
-      -- Define server configurations
-      -- Note: lua_ls is configured via lazydev.nvim plugin
-      local servers = {}
-
-      -- Use mason-lspconfig handlers for automatic setup
-      mason_lspconfig.setup_handlers({
-        -- Default handler for all servers
-        function(server_name)
-          local server_opts = {
-            capabilities = capabilities,
-          }
-
-          -- Merge custom settings if they exist
-          if servers[server_name] then
-            server_opts = vim.tbl_deep_extend("force", server_opts, servers[server_name])
-          end
-
-          -- Use the new vim.lsp.config API (Neovim 0.11+)
-          vim.lsp.config(server_name, server_opts)
-          vim.lsp.enable(server_name)
-        end,
+            -- Use the new vim.lsp.config API (Neovim 0.11+)
+            vim.lsp.config(server_name, server_opts)
+            vim.lsp.enable(server_name)
+          end,
+        },
       })
 
       -- Global mappings for diagnostics
