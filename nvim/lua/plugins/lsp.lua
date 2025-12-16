@@ -42,38 +42,22 @@ return {
       -- Note: lua_ls is configured via lazydev.nvim plugin
       local servers = {}
 
-      -- Setup each server
-      local lspconfig = require("lspconfig")
-      
-      -- Get all available servers from mason-lspconfig
-      local installed_servers = mason_lspconfig.get_installed_servers()
-      
-      -- Setup function for servers
-      local function setup_server(server_name)
-        local server_opts = {
-          capabilities = capabilities,
-        }
-        
-        -- Merge custom settings if they exist
-        if servers[server_name] then
-          server_opts = vim.tbl_deep_extend("force", server_opts, servers[server_name])
-        end
-        
-        lspconfig[server_name].setup(server_opts)
-      end
+      -- Use mason-lspconfig handlers for automatic setup
+      mason_lspconfig.setup_handlers({
+        -- Default handler for all servers
+        function(server_name)
+          local server_opts = {
+            capabilities = capabilities,
+          }
 
-      -- Setup all installed servers
-      for _, server_name in ipairs(installed_servers) do
-        setup_server(server_name)
-      end
-
-      -- Auto-setup servers when they are installed
-      vim.api.nvim_create_autocmd("User", {
-        pattern = "MasonToolsUpdateCompleted",
-        callback = function()
-          for _, server_name in ipairs(mason_lspconfig.get_installed_servers()) do
-            setup_server(server_name)
+          -- Merge custom settings if they exist
+          if servers[server_name] then
+            server_opts = vim.tbl_deep_extend("force", server_opts, servers[server_name])
           end
+
+          -- Use the new vim.lsp.config API (Neovim 0.11+)
+          vim.lsp.config(server_name, server_opts)
+          vim.lsp.enable(server_name)
         end,
       })
 
