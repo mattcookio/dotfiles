@@ -143,7 +143,6 @@ alias yeet="git commit -n --allow-empty -m"
 # Development tools
 alias dkill='docker kill $(docker ps -q)'
 alias dcu="docker-compose up -d"
-alias claude="$HOME/.claude/local/claude"
 
 # Nuclear option: completely clean Docker system
 alias dnuke='docker stop $(docker ps -aq) 2>/dev/null; \
